@@ -19,7 +19,7 @@ Develop
     cd ckanext-rems
     # activate virtualenv
     python setup.py develop
-    # 'rems' for 'ckan.plugins' key in your <development>.ini
+    # Add 'rems' for 'ckan.plugins' key in your <development>.ini
 
 
 Installation
