@@ -9,7 +9,7 @@ REMS provides tools to design application forms and workflows for items
 requiring authorization. REMS can be used by end user to apply access rights.
 Users controlling workflow may use REMS to administer the application as well as
 already granted access rights.
-
+See: [https://tnc2013.terena.org/core/presentation/18](https://tnc2013.terena.org/core/presentation/18)
 
 Installation
 ============
