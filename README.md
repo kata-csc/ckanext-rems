@@ -11,6 +11,17 @@ Users controlling workflow may use REMS to administer the application as well as
 already granted access rights.
 See: [https://tnc2013.terena.org/core/presentation/18](https://tnc2013.terena.org/core/presentation/18)
 
+
+Develop
+=======
+
+    git clone https://github.com/kata-csc/ckanext-rems.git
+    cd ckanext-rems
+    # activate virtualenv
+    python setup.py develop
+    # 'rems' for 'ckan.plugins' key in your <development>.ini
+
+
 Installation
 ============
 
