@@ -1,23 +1,20 @@
 import logging
 
+import ckan.plugins as plugin
 import rems_client
-
-from ckan.plugins import SingletonPlugin
-from ckan.plugins import implements
-from ckan.plugins import toolkit
-from ckan.plugins import IConfigurer, IPackageController
 
 log = logging.getLogger("ckanext.rems")
 
-class RemsPlugin(SingletonPlugin):
 
-    implements(IConfigurer, inherit=True)
-    implements(IPackageController, inherit=True)
+class RemsPlugin(plugin.SingletonPlugin):
+
+    plugin.implements(plugin.IConfigurer, inherit=True)
+    plugin.implements(plugin.IPackageController, inherit=True)
 
     # IConfigurer hooks
 
     def update_config(self, config):
-        toolkit.add_template_directory(config, "templates")
+        plugin.toolkit.add_template_directory(config, "templates")
 
     # IPackageController hooks
 
