@@ -12,7 +12,7 @@ def generate_json_metadata(pkg_dict):
     resource['resourceDomain'] = '?'
     resource['resourceId'] = pkg_dict['id']
 
-    if pkg_dict['resources'] and len(pkg_dict['resources']):
+    if 'resources' in pkg_dict and len(pkg_dict['resources']) > 0:
         resource['resourceUrl'] = pkg_dict['resources'][0]['url']
     metadata['resource'] = resource
 
