@@ -1,0 +1,16 @@
+<SPConfig>
+    <!-- Path... -->
+    <ApplicationDefaults>
+    <!-- to tags. -->
+        <MetadataProvider type="XML" file="your-rems-metadata-file.xml"/>
+
+        <AttributeResolver type="Chaining">
+            <AttributeResolver type="Query"/>
+            <AttributeResolver type="SimpleAggregation" attributeId="eppn" format="urn:oid:1.3.6.1.4.1.5923.1.1.1.6">
+                <Entity>https://your.rems.host/pathto/shibboleth</Entity>
+                <Attribute Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.7" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="eduPersonEntitlement"/>
+            </AttributeResolver>
+        </AttributeResolver>
+
+    </ApplicationDefaults>
+</SPConfig>
