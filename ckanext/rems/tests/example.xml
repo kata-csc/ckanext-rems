@@ -1,7 +1,11 @@
-<CatalogItem title="First test item by Juho">
-    <Resource>
+<SimpleCatalogItem>
+    <Title lang="fi">Katan eka testikappale</Title>
+    <Title lang="en">First test item for Kata</Title>
+  <Resource>
         <ResourceDomain>Kata</ResourceDomain>
-        <ResourceId>TEST1XML</ResourceId>
-        <Owner eppn="ktester@funet.fi"/>
+        <ResourceId>urn:nbn:fi:csc-kata2014ktester</ResourceId>
+        <Owners>
+            <Owner eppn="ktester@funet.fi"/>
+        </Owners>
     </Resource>
-</CatalogItem>
+</SimpleCatalogItem>

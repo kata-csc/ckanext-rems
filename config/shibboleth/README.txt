@@ -1,5 +1,5 @@
 CKANEXT-REMS Shibboleth settings
-=================
+================================
 
 This folder contains the example additions to Shibboleth config used by
 ckanext-rems plug-in.
