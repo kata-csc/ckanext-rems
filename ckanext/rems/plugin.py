@@ -27,7 +27,8 @@ class RemsPlugin(plugin.SingletonPlugin):
     def _update_metadata(self, context, pkg_dict):
         #raise ValueError()  # debugging
         if 'availability' in pkg_dict and pkg_dict['availability'] == u'access_application':
+            log.debug("Posting updated package metadata to REMS")
             application_url = pkg_dict['access_application_URL']
             json = rems_client.generate_json_metadata(pkg_dict)
+            rems_client.post_metadata(json, post_format="application/json")
 
-            # TODO: post metadata

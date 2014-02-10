@@ -25,3 +25,7 @@ def generate_json_metadata(pkg_dict):
     # FIXME: license metadata
 
     return json.dumps({ 'simplecatalogitem': metadata })
+
+def post_metadata(metadata, post_format="application/json"):
+    # FIXME: stub
+    log.info(metadata)
