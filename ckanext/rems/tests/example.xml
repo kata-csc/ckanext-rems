@@ -1,0 +1,7 @@
+<CatalogItem title="First test item by Juho">
+    <Resource>
+        <ResourceDomain>Kata</ResourceDomain>
+        <ResourceId>TEST1XML</ResourceId>
+        <Owner eppn="ktester@funet.fi"/>
+    </Resource>
+</CatalogItem>
