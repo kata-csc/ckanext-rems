@@ -1,0 +1,24 @@
+{
+    "simplecatalogitem": {
+        "titles": [
+            {
+                "lang": "fin",
+                "value": "Katan ensimmäinen json-testikappale"
+            },
+            {
+                "lang": "eng",
+                "value": "First json test item for Kata"
+            }
+        ],
+        "resource": {
+            "resourceDomain": "Kata",
+            "resourceId": "urn:nbn:fi:csc-kata20140214test",
+            "resourceUrl": "http://remsaa.fsdD.fi/to_be_a",
+            "owners": [
+                {
+                    "email": "ktester@funet.fi"
+                }
+            ]
+        }
+    }
+}
