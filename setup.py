@@ -31,5 +31,7 @@ setup(
     '''
     [ckan.plugins]
     rems=ckanext.rems.plugin:RemsPlugin
+    [paste.paster_command]
+    remscmd = ckanext.rems.rems_command:RemsCommand
     ''',
 )
