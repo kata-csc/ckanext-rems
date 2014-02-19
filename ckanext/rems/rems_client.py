@@ -17,7 +17,8 @@ def generate_json_metadata(pkg_dict):
     resource['resourceId'] = pkg_dict['name']
 
     if 'resources' in pkg_dict and len(pkg_dict['resources']) > 0:
-        resource['resourceUrl'] = pkg_dict['resources'][0]['url']
+        # resource['resourceUrl'] = pkg_dict['resources'][0]['url']  # This gives error, no 'url' in resource
+        resource['resourceUrl'] = pkg_dict['access_application_URL']
     metadata['resource'] = resource
 
     metadata['resource']['owners'] = [ { 'email': pkg_dict['maintainer_email'] } ]
