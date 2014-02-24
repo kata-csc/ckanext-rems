@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <SimpleCatalogItem>
-    <Title lang="fi">Katan eka testikappale</Title>
+    <Title lang="fi">Katan ensimmäinen testikappale</Title>
     <Title lang="en">First test item for Kata</Title>
   <Resource>
         <ResourceDomain>Kata</ResourceDomain>
