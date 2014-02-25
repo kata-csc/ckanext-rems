@@ -3,6 +3,7 @@ import logging
 import ckan.plugins as plugin
 import rems_client
 import settings
+import convert
 
 log = logging.getLogger("ckanext.rems")
 
@@ -25,6 +26,8 @@ class RemsPlugin(plugin.SingletonPlugin):
     def after_update(self, context, pkg_dict):
         self._update_metadata(context, pkg_dict)
 
+    # private methods
+
     def _update_metadata(self, context, pkg_dict):
         #raise ValueError()  # debugging
         if 'availability' in pkg_dict and pkg_dict['availability'] == u'access_application':
@@ -32,6 +35,12 @@ class RemsPlugin(plugin.SingletonPlugin):
             application_url = pkg_dict['access_application_URL']
 
             titles = pkg_dict['langtitle']
+            for title in titles:
+                try:
+                    title['lang'] = convert.convert_language_code(title['lang'])
+                except ValueError, e:
+                    log.warn(str(e))
+
             name = pkg_dict['name']
             license_reference = pkg_dict['license_id']
             owner_emails = [ pkg_dict['maintainer_email'] ]
