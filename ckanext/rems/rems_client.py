@@ -48,17 +48,16 @@ def package_metadata_to_json(titles, id, owner_emails, license_reference, url=No
     return json.dumps({ 'simplecatalogitem': metadata })
 
 
-def post_metadata(metadata, post_format="application/json"):
+def post_metadata(url, metadata, post_format="application/json"):
     '''
-    Post catalog item (metadata of a dataset) to REMS.
+    Post catalog item (metadata of a dataset) or a license reference to REMS.
 
     DEV: Email for 'ktester' account is 'kata.tester@funet.fi'
     '''
     # TODO: Because of key handling, should this be private function? Add security?
     log.info('Metadata: {md}'.format(md=metadata))
-    request_url = settings.REMS_REST_BASE_URL + 'addCatalogItem'
     try:
-        resp = requests.post(request_url,
+        resp = requests.post(url,
                              metadata,
                              headers={'Content-Type': post_format},
                              verify=False,  # TODO: Remove in production?

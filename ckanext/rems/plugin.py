@@ -2,6 +2,7 @@ import logging
 
 import ckan.plugins as plugin
 import rems_client
+import settings
 
 log = logging.getLogger("ckanext.rems")
 
@@ -42,4 +43,5 @@ class RemsPlugin(plugin.SingletonPlugin):
                     url = resources['url']
 
             json = rems_client.package_metadata_to_json(titles, name, owner_emails, license_reference, url)
-            rems_client.post_metadata(json, post_format="application/json")
+            request_url = settings.REMS_REST_BASE_URL + 'addCatalogItem'
+            rems_client.post_metadata(request_url, json, post_format="application/json")
