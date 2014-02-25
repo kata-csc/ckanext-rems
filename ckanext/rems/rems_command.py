@@ -1,18 +1,21 @@
 import settings
 
-import ckan.lib.cli
+import ckan.lib.cli as cli
 import ckan.model.license
 
 import sys
 import json
 
-class RemsCommand(ckan.lib.cli.CkanCommand):
+class RemsCommand(cli.CkanCommand):
     """
-    Usage: remscmd <command> <server_url>
+    Usage: remscmd <command> <server_url> <owner_email>
 
-    Commands:
-    add_ckan_licenses <server_url> <license-owner-email>
-      - post the CKAN license list to REMS
+    Allowed commands:
+
+    add_ckan_licenses \t- posts the CKAN license list to REMS
+
+    In all cases, <owner_email> should be a Haka-registered email
+    address for the owner of the license or dataset.
     """
 
     summary = __doc__.split('\n')[0]
@@ -20,22 +23,21 @@ class RemsCommand(ckan.lib.cli.CkanCommand):
 
     def __init__(self, name):
         super(RemsCommand, self).__init__(name)
-        self._min_args = 2
+        self._min_args = 3
         self._max_args = 3
 
     def command(self):
         self._load_config()
+
         if len(self.args) < self._min_args or len(self.args) > self._max_args:
             self.parser.print_usage()
             sys.exit(1)
 
         cmd = self.args[0]
         rems_url = self.args[1]
+        owner_email = self.args[2]
+
         if cmd == 'add_ckan_licenses':
-            if len(self.args) < 3:
-                self.parser.print_usage()
-                sys.exit("License owner email address required")
-            owner_email = self.args[2]
             self._add_ckan_licenses(rems_url, owner_email)
         else:
             print "Command {c} not recognized".format(c=cmd)
