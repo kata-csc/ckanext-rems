@@ -13,12 +13,23 @@ import settings
 log = logging.getLogger("ckanext.rems.rems_client")
 
 
-def package_metadata_to_json(titles, name, owner_emails, license_reference, url=None):
+def package_metadata_to_json(titles, id, owner_emails, license_reference, url=None):
+    '''
+    Generates a REMS-compatible JSON dump from the given package metadata.
+
+    Arguments:
+    titles:  list of (lang, title) tuples
+    id:  id of the resource/dataset
+    owner_emails:  list of Haka-federated email addresses that identify the owners
+                   of the dataset
+    license_reference:  id of the license used for the dataset
+    url:  (optional) a URL from which the dataset can be obtained
+    '''
     metadata = {
         'titles': titles,
         'resource': {
             'resourceDomain': settings.REMS_RESOURCE_DOMAIN,
-            'resourceId': name,
+            'resourceId': id,
             'owners': [
                 {'email': email } for email in owner_emails
             ]
