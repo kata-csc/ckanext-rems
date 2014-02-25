@@ -29,6 +29,17 @@ class RemsPlugin(plugin.SingletonPlugin):
         if 'availability' in pkg_dict and pkg_dict['availability'] == u'access_application':
             log.debug("Posting updated package metadata to REMS")
             application_url = pkg_dict['access_application_URL']
-            json = rems_client.generate_json_metadata(pkg_dict)
-            rems_client.post_metadata(json, post_format="application/json")
 
+            titles = pkg_dict['langtitle']
+            name = pkg_dict['name']
+            license_reference = pkg_dict['license_id']
+            owner_emails = [ pkg_dict['maintainer_email'] ]
+
+            url = None
+            if 'resources' in pkg_dict:
+                resources = pkg_dict['resources']
+                if len(resources) > 0 and 'url' in resources[0]:
+                    url = resources['url']
+
+            json = rems_client.package_metadata_to_json(titles, name, owner_emails, license_reference, url)
+            rems_client.post_metadata(json, post_format="application/json")

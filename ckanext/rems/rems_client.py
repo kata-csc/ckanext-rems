@@ -12,24 +12,30 @@ import settings
 
 log = logging.getLogger("ckanext.rems.rems_client")
 
-def generate_json_metadata(pkg_dict):
-    metadata = {}
-    metadata['titles'] = pkg_dict['langtitle']
 
-    resource = {}
-    resource['resourceDomain'] = settings.REMS_RESOURCE_DOMAIN
-    resource['resourceId'] = pkg_dict['name']
+def package_metadata_to_json(titles, name, owner_emails, license_reference, url=None):
+    metadata = {
+        'titles': titles,
+        'resource': {
+            'resourceDomain': settings.REMS_RESOURCE_DOMAIN,
+            'resourceId': name,
+            'owners': [
+                {'email': email } for email in owner_emails
+            ]
+        },
+        'licenses': [
+            {
+                'reference': license_reference
+            }
+        ]
+    }
+    if url:
+        metadata['resource']['resourceUrl'] = url
 
-    if 'resources' in pkg_dict and len(pkg_dict['resources']) > 0:
-        # resource['resourceUrl'] = pkg_dict['resources'][0]['url']  # This gives error, no 'url' in resource
-        resource['resourceUrl'] = pkg_dict['access_application_URL']
-    metadata['resource'] = resource
-
-    metadata['resource']['owners'] = [ { 'email': pkg_dict['maintainer_email'] } ]
-
-    # FIXME: license metadata
+    # TODO: check for non-emptiness of owners list?
 
     return json.dumps({ 'simplecatalogitem': metadata })
+
 
 def post_metadata(metadata, post_format="application/json"):
     '''
