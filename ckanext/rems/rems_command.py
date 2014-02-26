@@ -1,4 +1,6 @@
 import settings
+import rems_client
+import license
 
 import ckan.lib.cli as cli
 import ckan.model.license
@@ -8,7 +10,7 @@ import json
 
 class RemsCommand(cli.CkanCommand):
     """
-    Usage: remscmd <command> <server_url> <owner_email>
+    Usage: remscmd <command> <owner_email> [server_url]
 
     Allowed commands:
 
@@ -16,6 +18,9 @@ class RemsCommand(cli.CkanCommand):
 
     In all cases, <owner_email> should be a Haka-registered email
     address for the owner of the license or dataset.
+
+    If server_url is not specified, REMS_REST_BASE_URL from settings.py
+    will be used.
     """
 
     summary = __doc__.split('\n')[0]
@@ -23,7 +28,7 @@ class RemsCommand(cli.CkanCommand):
 
     def __init__(self, name):
         super(RemsCommand, self).__init__(name)
-        self._min_args = 3
+        self._min_args = 2
         self._max_args = 3
 
     def command(self):
@@ -34,8 +39,12 @@ class RemsCommand(cli.CkanCommand):
             sys.exit(1)
 
         cmd = self.args[0]
-        rems_url = self.args[1]
-        owner_email = self.args[2]
+        owner_email = self.args[1]
+
+        if len(self.args) < 3:
+            rems_url = None
+        else:
+            rems_url = self.args[2]
 
         if cmd == 'add_ckan_licenses':
             self._add_ckan_licenses(rems_url, owner_email)
@@ -46,30 +55,25 @@ class RemsCommand(cli.CkanCommand):
         super(RemsCommand, self)._load_config()
 
     def _add_ckan_licenses(self, rems_url, owner_email):
+        if rems_url is None:
+            rems_url = settings.REMS_REST_BASE_URL + "addLicense"
+
         license_register = ckan.model.license.LicenseRegister()
         known_licenses = license_register.values()
 
-        metadata = {}
-        metadata['owner'] = { 'email': owner_email }
-        metadata['licenses'] = []
+        licenses = []
 
         for ckan_license in known_licenses:
-            license = {
-                'type': settings.LICENSE_TYPE,
-                'setreference': ckan_license.id,
-                'localizations': [
-                    {
-                        'lang': 'en',
-                        'title': ckan_license.title,
-                        'value': ckan_license.url
-                    }
-                ]
-            }
+            # TODO: support multiple localized versions of licenses?
+            lic = license.License(id=ckan_license.id, value_type='link')
+            content = license.LicenseLocalizedContent('en', ckan_license.title, ckan_license.url)
+            lic.add_localization(content)
+            licenses.append(lic)
 
-            metadata['licenses'].append(license)
+        metadata = rems_client.generate_license_metadata(licenses, owner_email)
+        json_metadata = json.dumps(metadata)
 
-        json_metadata = json.dumps({ 'importlicense': metadata })
-
-        # FIXME: actually send the information
-        print json_metadata
+        print "Sending license metadata to {u} ...".format(u=rems_url)
+        #print json_metadata
+        rems_client.post_metadata(rems_url, json_metadata)
 

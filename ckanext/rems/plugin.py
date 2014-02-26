@@ -1,4 +1,5 @@
 import logging
+import json
 
 import ckan.plugins as plugin
 import rems_client
@@ -51,6 +52,7 @@ class RemsPlugin(plugin.SingletonPlugin):
                 if len(resources) > 0 and 'url' in resources[0]:
                     url = resources['url']
 
-            json = rems_client.package_metadata_to_json(titles, name, owner_emails, license_reference, url)
+            metadata = rems_client.generate_package_metadata(titles, name, owner_emails, license_reference, url)
+            metadata_json = json.dumps(metadata)
             request_url = settings.REMS_REST_BASE_URL + 'addCatalogItem'
-            rems_client.post_metadata(request_url, json, post_format="application/json")
+            rems_client.post_metadata(request_url, metadata_json, post_format="application/json")

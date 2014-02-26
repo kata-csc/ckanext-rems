@@ -9,13 +9,16 @@ import requests
 
 import ckan.lib.base as base
 import settings
+import license
 
 log = logging.getLogger("ckanext.rems.rems_client")
 
 
-def package_metadata_to_json(titles, id, owner_emails, license, url=None):
+def generate_package_metadata(titles, id, owner_emails, license_id, url=None):
     '''
-    Generates a REMS-compatible JSON dump from the given package metadata.
+    Generates a REMS-compatible metadata structure from the given package metadata.
+    The result is a nested structure of dicts and lists that can be readily
+    converted to JSON.
 
     Arguments:
     titles       -- list of (lang, title) tuples
@@ -24,27 +27,54 @@ def package_metadata_to_json(titles, id, owner_emails, license, url=None):
     license      -- reference of the license used for the dataset
     url          -- (optional) a URL from which the dataset can be obtained
     '''
-    metadata = {
-        'titles': titles,
-        'resource': {
-            'resourceDomain': settings.REMS_RESOURCE_DOMAIN,
-            'resourceId': id,
-            'owners': [
-                {'email': email } for email in owner_emails
+    catalog_item = {
+        'simplecatalogitem': {
+            'titles': titles,
+            'resource': {
+                'resourceDomain': settings.REMS_RESOURCE_DOMAIN,
+                'resourceId': id,
+                'owners': [
+                    {'email': email } for email in owner_emails
+                ]
+            },
+            'licenses': [
+                {
+                    'reference': license_id
+                }
             ]
-        },
-        'licenses': [
-            {
-                'reference': license
-            }
-        ]
+        }
     }
     if url:
-        metadata['resource']['resourceUrl'] = url
+        catalog_item['simplecatalogitem']['resource']['resourceUrl'] = url
 
     # TODO: check for non-emptiness of owners list?
 
-    return json.dumps({ 'simplecatalogitem': metadata })
+    return catalog_item
+
+
+def generate_license_metadata(licenses, owner_email, resource_domain=settings.REMS_RESOURCE_DOMAIN):
+    '''
+    Generates a REMS-compatible metadata structure for a list of licenses
+    ready for importing to REMS. The result is a nested structure of
+    dicts and lists that can be readily converted to JSON.
+
+    Arguments:
+    licenses        -- a sequence of License objects
+    owner_email     -- the email address to be defined as the owner of the licenses in REMS
+    resource_domain -- the REMS resource domain for the licenses
+    '''
+
+    licenses_dict = {
+        'importlicense': {
+            'resourcedomain': resource_domain,
+            'owner': {
+                'email': owner_email
+            },
+            'licenses': [ l.as_dict() for l in licenses ]
+        }
+    }
+
+    return licenses_dict
 
 
 def post_metadata(url, metadata, post_format="application/json"):
