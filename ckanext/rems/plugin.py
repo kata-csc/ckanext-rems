@@ -47,10 +47,14 @@ class RemsPlugin(plugin.SingletonPlugin):
             owner_emails = [ pkg_dict['maintainer_email'] ]
 
             url = None
+            # FIXME: Take url from resource which has: 'resources': [{},{...u'resource_type': 'not_known_yet',...},...,{}]
             if 'resources' in pkg_dict:
-                resources = pkg_dict['resources']
-                if len(resources) > 0 and 'url' in resources[0]:
-                    url = resources['url']
+                for resource in pkg_dict['resources']:
+                    if (resource.has_key('resource_type') and
+                        resource['resource_type'] == u'documentation' and  # FIXME (see above)
+                        resource['url']):
+                        url = resource['url']
+                        break
 
             metadata = rems_client.generate_package_metadata(titles, name, owner_emails, license_reference, url)
             metadata_json = json.dumps(metadata)
