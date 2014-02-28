@@ -1,12 +1,11 @@
-import settings
-import rems_client
-import license
+import sys
+import json
 
 import ckan.lib.cli as cli
 import ckan.model.license
-
-import sys
-import json
+import license
+import rems_client
+import settings
 
 class RemsCommand(cli.CkanCommand):
     """
