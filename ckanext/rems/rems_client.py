@@ -2,14 +2,12 @@
 Methods for communicating with the Resource Entitlement Management System
 """
 
-import json
 import logging
 
 import requests
 
 import ckan.lib.base as base
 import settings
-import license
 
 log = logging.getLogger("ckanext.rems.rems_client")
 
