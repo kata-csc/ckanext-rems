@@ -2,14 +2,12 @@
 Methods for communicating with the Resource Entitlement Management System
 """
 
-import json
 import logging
 
 import requests
 
 import ckan.lib.base as base
 import settings
-import license
 
 log = logging.getLogger("ckanext.rems.rems_client")
 
@@ -92,7 +90,7 @@ def post_metadata(url, metadata, post_format="application/json"):
                              verify=False,  # TODO: Remove in production?
                              cert=(settings.CLIENT_CERTIFICATE_PATH,
                                    settings.CLIENT_PRIVATE_KEY_PATH))
-        rd = resp.json()['Response']
+        rd = resp.json['Response']
         log.debug('Response status: {st}, code: {co}, message: {msg}'.format(
             st=resp.status_code, co=rd['Code'], msg=rd['Message']))
         return resp.ok  # True
