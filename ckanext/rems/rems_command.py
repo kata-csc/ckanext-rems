@@ -1,5 +1,5 @@
-import sys
 import json
+import sys
 
 import ckan.lib.cli as cli
 import ckan.model.license
