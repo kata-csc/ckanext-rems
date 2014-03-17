@@ -99,3 +99,16 @@ def post_metadata(url, metadata, post_format="application/json"):
         details = '''Could not send metadata because a
                             connection error occurred. %s''' % error
         base.abort(500, detail=details)
+
+
+def get_access_application_url(resource_id, target="application"):
+    '''
+    Generates the entry point URL for access application workflow.
+    '''
+    url = "{base}?target={t}&domain={d}&resource={r}".format(
+        base=settings.ACCESS_APPLICATION_BASE_URL,
+        t=target,
+        d=settings.REMS_RESOURCE_DOMAIN,
+        r=resource_id
+    )
+    return url

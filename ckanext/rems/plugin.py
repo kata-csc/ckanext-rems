@@ -33,7 +33,6 @@ class RemsPlugin(plugin.SingletonPlugin):
         #raise ValueError()  # debugging
         if 'availability' in pkg_dict and pkg_dict['availability'] == u'access_application':
             log.debug("Posting updated package metadata to REMS")
-            application_url = pkg_dict['access_application_URL']
 
             titles = pkg_dict['langtitle']
             for title in titles:
@@ -59,4 +58,6 @@ class RemsPlugin(plugin.SingletonPlugin):
             metadata = rems_client.generate_package_metadata(titles, name, owner_emails, license_reference, url)
             metadata_json = json.dumps(metadata)
             request_url = settings.REMS_REST_BASE_URL + 'addCatalogItem'
+
             rems_client.post_metadata(request_url, metadata_json, post_format="application/json")
+            pkg_dict['access_application_URL'] = rems_client.get_access_application_url(name)
