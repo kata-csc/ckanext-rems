@@ -19,7 +19,7 @@ def generate_package_metadata(titles, id, owner_emails, license_id, url=None):
     converted to JSON.
 
     Arguments:
-    titles       -- list of (lang, title) tuples
+    titles       -- list of {'lang': 'val', 'title': 'val') dicts
     id           -- id of the resource/dataset
     owner_emails -- list of Haka-federated email addresses that identify the owners of the dataset
     license      -- reference of the license used for the dataset
@@ -90,25 +90,18 @@ def post_metadata(url, metadata, post_format="application/json"):
                              verify=False,  # TODO: Remove in production?
                              cert=(settings.CLIENT_CERTIFICATE_PATH,
                                    settings.CLIENT_PRIVATE_KEY_PATH))
-        rd = resp.json()['Response']
-        log.debug('Response status: {st}, code: {co}, message: {msg}'.format(
-            st=resp.status_code, co=rd['Code'], msg=rd['Message']))
-        return resp.ok  # True
-    # FIXME: Copied 'except' from ckanext/resourceproxy/controller.py
-    except requests.exceptions.ConnectionError, error:
-        details = '''Could not send metadata because a
-                            connection error occurred. %s''' % error
-        base.abort(500, detail=details)
-
-
-def get_access_application_url(resource_id, target="application"):
-    '''
-    Generates the entry point URL for access application workflow.
-    '''
-    url = "{base}?target={t}&domain={d}&resource={r}".format(
-        base=settings.ACCESS_APPLICATION_BASE_URL,
-        t=target,
-        d=settings.REMS_RESOURCE_DOMAIN,
-        r=resource_id
-    )
-    return url
+        if resp.ok:
+            rd = resp.json()['Response']
+            log.debug('Response status: {st}, code: {co}, message: {msg}'.format(
+                st=resp.status_code, co=rd['Code'], msg=rd['Message']))
+            return True
+        else:
+            log.warn('Response status: {st}, message: {msg}'.format(
+                st=resp.status_code, msg=resp.text))
+            return False
+    except requests.exceptions.ConnectionError, err:
+        # TODO: This should retry in background (and notify success)
+        # Copied 'except' from ckanext/resourceproxy/controller.py
+        log.warn('Could not send metadata because a connection error '
+                 'occurred: {er}'.format(er=err))
+        return False
