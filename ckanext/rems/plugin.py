@@ -45,7 +45,6 @@ class RemsPlugin(plugin.SingletonPlugin):
                 pkg.extras['availability'] == u'access_application' and
                 pkg.extras['access_application_new_form'] == 'True'):
             log.debug("Posting updated package metadata to REMS")
-            application_url = pkg.extras['access_application_URL']
 
             titles = sorted([(k,v) for (k,v) in pkg.extras.items() if re.search('^title', k)])
             langs = sorted([(k,v) for (k,v) in pkg.extras.items() if re.search('^lang_title', k)])
@@ -74,15 +73,14 @@ class RemsPlugin(plugin.SingletonPlugin):
             metadata_json = json.dumps(metadata)
             # TODO: add 'addCatalogItem' to rabbitMQ queue for asynchronous performance
             request_url = settings.REMS_REST_BASE_URL + 'addCatalogItem'
-            post_success = rems_client.post_metadata(request_url, metadata_json, post_format="application/json")
+            post_success = rems_client.post_metadata(request_url, metadata_json,
+                                                     post_format="application/json")
 
             #return post_success  # Cut from here? So that harvesters don't get flash messages?
 
             if post_success:
                 pkg.extras['access_application_URL'] = \
-                    settings.ACCESS_APPLICATION_BASE_URL + \
-                    '?target=application&domain=' + \
-                    settings.REMS_RESOURCE_DOMAIN + '&resource=' + name
+                    rems_client.get_access_application_url(name)
             else:
                 h.flash_notice(
                     _('Dataset saved succesfully but REMS application creation'
