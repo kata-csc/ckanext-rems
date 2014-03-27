@@ -6,7 +6,6 @@ import logging
 
 import requests
 
-import ckan.lib.base as base
 import settings
 
 log = logging.getLogger(__name__)

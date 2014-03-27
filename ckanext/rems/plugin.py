@@ -10,7 +10,7 @@ import rems_client
 import settings
 import convert
 
-log = logging.getLogger("ckanext.rems")
+log = logging.getLogger(__name__)
 
 
 class RemsPlugin(plugin.SingletonPlugin):
@@ -29,10 +29,9 @@ class RemsPlugin(plugin.SingletonPlugin):
         self._update_metadata(pkg)
 
     def edit(self, pkg):
-        # raise AttributeError("To test pkg object in web debug view")
         self._update_metadata(pkg)
 
-    # private methods
+    # Private methods
 
     def _update_metadata(self, pkg):
         '''Update REMS metadata
@@ -40,9 +39,7 @@ class RemsPlugin(plugin.SingletonPlugin):
         :param pkg: package to be committed
         :type pkg: ckan.model.Package object
         '''
-        #raise ValueError()  # debugging
-        if ('availability' in pkg.extras and
-                pkg.extras['availability'] == u'access_application' and
+        if (pkg.extras.get('availability') == u'access_application' and
                 pkg.extras['access_application_new_form'] == 'True'):
             log.debug("Posting updated package metadata to REMS")
 
@@ -73,12 +70,14 @@ class RemsPlugin(plugin.SingletonPlugin):
             metadata_json = json.dumps(metadata)
             # TODO: add 'addCatalogItem' to rabbitMQ queue for asynchronous performance
             request_url = settings.REMS_REST_BASE_URL + 'addCatalogItem'
-            post_success = rems_client.post_metadata(request_url, metadata_json,
-                                                     post_format="application/json")
+            post_success = rems_client.post_metadata(
+                request_url, metadata_json, post_format="application/json")
 
             #return post_success  # Cut from here? So that harvesters don't get flash messages?
 
             if post_success:
+                # Note: To be able to update like here, key must exist. Ensured
+                # in validators.
                 pkg.extras['access_application_URL'] = \
                     rems_client.get_access_application_url(name)
             else:
