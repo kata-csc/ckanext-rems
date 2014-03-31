@@ -3,12 +3,12 @@ Classes and functions for handling license metadata
 and preparing it for sending to REMS.
 """
 
-import settings
+import pylons.config as config
 
 class License(object):
     """A representation of the metadata of a single license for purposes of the REMS client."""
 
-    def __init__(self, id, value_type=settings.DEFAULT_LICENSE_TYPE):
+    def __init__(self, id, value_type=config.get('rems.default_license_type')):
         """
         Arguments:
         id         -- the reference id of the license within the resource domain

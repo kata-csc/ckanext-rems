@@ -28,3 +28,23 @@ Installation
 To install this REMS-plugin
 
   pip install -e git://github.com/kata-csc/ckanext-rems.git#egg=ckanext-rems
+
+
+.ini configuration
+------------------
+
+Put following lines under [app:main]
+
+    rems.resource_domain = "Kata"
+    rems.rest_base_url = "https://reetta.csc.fi:8444/rems-rest/"
+    rems.access_application_base_url = "https://reetta.csc.fi/web/guest/catalogue"
+
+    rems.default_license_type = "link"  # possible values: text, attachment, link
+    rems.client_certificate_path = '/etc/pki/tls/certs/development.crt'
+    rems.client_private_key_path = '/etc/pki/tls/certs/development.key'
+
+
+Shibboleth configuration
+------------------------
+
+Configuration notes: config/shibboleth/README.txt

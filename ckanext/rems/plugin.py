@@ -3,11 +3,11 @@ import logging
 import re
 
 from pylons.i18n import _
+import pylons.config as config
 
 import ckan.lib.helpers as h
 import ckan.plugins as plugin
 import rems_client
-import settings
 import convert
 
 log = logging.getLogger(__name__)
@@ -69,7 +69,7 @@ class RemsPlugin(plugin.SingletonPlugin):
                 title_list, name, owner_emails, license_reference, data_url)
             metadata_json = json.dumps(metadata)
             # TODO: add 'addCatalogItem' to rabbitMQ queue for asynchronous performance
-            request_url = settings.REMS_REST_BASE_URL + 'addCatalogItem'
+            request_url = config.get('rems.rest_base_url') + 'addCatalogItem'
             post_success = rems_client.post_metadata(
                 request_url, metadata_json, post_format="application/json")
 

@@ -6,7 +6,7 @@ the REMS server.
 import pycountry
 import logging
 
-log = logging.getLogger("ckanext.rems.langutil")
+log = logging.getLogger(__name__)
 
 def convert_language_code(lang_code):
     """

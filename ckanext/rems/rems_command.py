@@ -1,11 +1,13 @@
 import json
 import sys
 
+import pylons.config as config
+
 import ckan.lib.cli as cli
 import ckan.model.license
 import license
 import rems_client
-import settings
+
 
 class RemsCommand(cli.CkanCommand):
     """
@@ -18,7 +20,7 @@ class RemsCommand(cli.CkanCommand):
     In all cases, <owner_email> should be a Haka-registered email
     address for the owner of the license or dataset.
 
-    If server_url is not specified, REMS_REST_BASE_URL from settings.py
+    If server_url is not specified, rems.rest_base_url from config
     will be used.
     """
 
@@ -55,7 +57,7 @@ class RemsCommand(cli.CkanCommand):
 
     def _add_ckan_licenses(self, rems_url, owner_email):
         if rems_url is None:
-            rems_url = settings.REMS_REST_BASE_URL + "addLicense"
+            rems_url = config.get('rems.rest_base_url') + "addLicense"
 
         license_register = ckan.model.license.LicenseRegister()
         known_licenses = license_register.values()

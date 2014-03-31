@@ -4,9 +4,9 @@ Methods for communicating with the Resource Entitlement Management System
 
 import logging
 
+import pylons.config as config
 import requests
 
-import settings
 
 log = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ def generate_package_metadata(titles, id, owner_emails, license_id, url=None):
         'simplecatalogitem': {
             'titles': titles,
             'resource': {
-                'resourceDomain': settings.REMS_RESOURCE_DOMAIN,
+                'resourceDomain': config.get('rems.resource_domain'),
                 'resourceId': id,
                 'owners': [
                     {'email': email } for email in owner_emails
@@ -49,7 +49,8 @@ def generate_package_metadata(titles, id, owner_emails, license_id, url=None):
     return catalog_item
 
 
-def generate_license_metadata(licenses, owner_email, resource_domain=settings.REMS_RESOURCE_DOMAIN):
+def generate_license_metadata(licenses, owner_email,
+                              resource_domain=config.get('rems.resource_domain')):
     '''
     Generates a REMS-compatible metadata structure for a list of licenses
     ready for importing to REMS. The result is a nested structure of
@@ -87,8 +88,8 @@ def post_metadata(url, metadata, post_format="application/json"):
                              metadata,
                              headers={'Content-Type': post_format},
                              verify=False,  # TODO: Remove in production?
-                             cert=(settings.CLIENT_CERTIFICATE_PATH,
-                                   settings.CLIENT_PRIVATE_KEY_PATH))
+                             cert=(config.get('rems.client_certificate_path'),
+                                   config.get('rems.client_private_key_path')))
         if resp.ok:
             rd = resp.json()['Response']
             log.debug('Response status: {st}, code: {co}, message: {msg}'.format(
@@ -111,9 +112,9 @@ def get_access_application_url(resource_id, target="application"):
     Generates the entry point URL for access application workflow.
     '''
     url = "{base}?target={t}&domain={d}&resource={r}".format(
-        base=settings.ACCESS_APPLICATION_BASE_URL,
+        base=config.get('rems.access_application_base_url'),
         t=target,
-        d=settings.REMS_RESOURCE_DOMAIN,
+        d=config.get('rems.resource_domain'),
         r=resource_id
     )
     return url
