@@ -35,13 +35,13 @@ To install this REMS-plugin
 
 Put following lines under [app:main]
 
-    rems.resource_domain = "Kata"
-    rems.rest_base_url = "https://reetta.csc.fi:8444/rems-rest/"
-    rems.access_application_base_url = "https://reetta.csc.fi/web/guest/catalogue"
-
-    rems.default_license_type = "link"  # possible values: text, attachment, link
-    rems.client_certificate_path = '/etc/pki/tls/certs/development.crt'
-    rems.client_private_key_path = '/etc/pki/tls/certs/development.key'
+    rems.resource_domain = Your_domain
+    rems.rest_base_url = https://your.rems.host/rest_api/
+    rems.access_application_base_url = https://your.rems.host/your_catalogue
+    # rems.default_license_type possible values: text, attachment, link
+    rems.default_license_type = link
+    rems.client_certificate_path = /path/to/development.crt
+    rems.client_private_key_path = /path/to/development.key
 
 
 Shibboleth configuration
