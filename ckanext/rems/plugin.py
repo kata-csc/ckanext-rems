@@ -55,7 +55,7 @@ class RemsPlugin(plugin.SingletonPlugin):
 
             name = pkg.name
             license_reference = pkg.license_id
-            owner_emails = [pkg.maintainer_email]
+            owner_emails = [pkg.extras['contact_0_email']]
 
             data_url = None
             # FIXME: Somehow pick the actual data resource. By resource_type(?):
@@ -87,4 +87,4 @@ class RemsPlugin(plugin.SingletonPlugin):
                 # TODO: Add message also to users News feed(?) that REMS application creation failed
                 # IDomainObjectModification.notify(self, entity, operation) ??
                 # TODO: Add failed item to retry queue
-                log.debug('Adding failed item to retry queue (unimplementd)')
+                log.debug('Adding failed item to retry queue (unimplemented)')
