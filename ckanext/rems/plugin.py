@@ -84,7 +84,5 @@ class RemsPlugin(plugin.SingletonPlugin):
                 h.flash_notice(
                     _('Dataset saved but REMS application creation failed. To '
                       'retry, save dataset later without changes.'))
-                # TODO: Add message also to users News feed(?) that REMS application creation failed
-                # IDomainObjectModification.notify(self, entity, operation) ??
                 # TODO: Add failed item to retry queue
                 log.debug('Adding failed item to retry queue (unimplemented)')

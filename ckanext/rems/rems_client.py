@@ -44,8 +44,6 @@ def generate_package_metadata(titles, id, owner_emails, license_id, url=None):
     if url:
         catalog_item['simplecatalogitem']['resource']['resourceUrl'] = url
 
-    # TODO: check for non-emptiness of owners list?
-
     return catalog_item
 
 
@@ -81,7 +79,6 @@ def post_metadata(url, metadata, post_format="application/json"):
 
     DEV: Email for 'ktester' account is 'kata.tester@funet.fi'
     '''
-    # TODO: Because of key handling, should this be private function? Add security?
     log.info('Metadata: {md}'.format(md=metadata))
     try:
         resp = requests.post(url,
