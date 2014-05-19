@@ -48,7 +48,7 @@ def generate_package_metadata(titles, id, owner_emails, license_id, url=None):
 
 
 def generate_license_metadata(licenses, owner_email,
-                              resource_domain=config.get('rems.resource_domain')):
+                              resource_domain=None):
     '''
     Generates a REMS-compatible metadata structure for a list of licenses
     ready for importing to REMS. The result is a nested structure of
@@ -57,8 +57,12 @@ def generate_license_metadata(licenses, owner_email,
     Arguments:
     licenses        -- a sequence of License objects
     owner_email     -- the email address to be defined as the owner of the licenses in REMS
-    resource_domain -- the REMS resource domain for the licenses
+    resource_domain -- the REMS resource domain for the licenses;
+                       if None, use the default set in Pylons configuration
     '''
+
+    if not resource_domain:
+        resource_domain = config.get('rems.resource_domain')
 
     licenses_dict = {
         'importlicense': {
