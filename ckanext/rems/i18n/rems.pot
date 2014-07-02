@@ -1,0 +1,24 @@
+# Translations template for ckanext-rems.
+# Copyright (C) 2014 CSC - IT Center for Science Ltd.
+# This file is distributed under the same license as the ckanext-rems project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ckanext-rems 0.1\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2014-05-17 20:21+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+
+#: ckanext/rems/plugin.py:85
+msgid ""
+"Dataset saved but REMS application creation failed. To retry, save dataset "
+"later without changes."
+msgstr "Tallennettu, mutta REMS-hakemuksen luonti epäonnistui. Luo hakemus tallentamalla tietoaineisto uudelleen muokkaamatta."
+

@@ -29,6 +29,15 @@ setup(
     tests_require=[
         'nose',
     ],
+        package_data={'ckan': [
+        'i18n/*/LC_MESSAGES/*.mo',
+        ]
+    },
+    message_extractors={
+        'ckanext': [
+            ('**.py', 'python', None),
+        ],
+    },
     entry_points=
     '''
     [ckan.plugins]
