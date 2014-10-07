@@ -39,6 +39,9 @@ class RemsPlugin(plugin.SingletonPlugin):
         :param pkg: package to be committed
         :type pkg: ckan.model.Package object
         '''
+
+        self._preprocess_if_ida_dataset(pkg)
+
         if (pkg.extras.get('availability') == u'access_application' and
                 pkg.extras['access_application_new_form'] == 'True'):
             log.debug("Posting updated package metadata to REMS")
@@ -57,13 +60,16 @@ class RemsPlugin(plugin.SingletonPlugin):
             license_reference = pkg.license_id
             owner_emails = [pkg.extras['contact_0_email']]
 
-            data_url = None
-            # FIXME: Somehow pick the actual data resource. By resource_type(?):
-            # 'resources': [{},{...u'resource_type': 'not_known_yet',...},..,{}]
-            for resource in pkg.resources:
-                if resource.resource_type == u'documentation':  # FIXME (see above)
-                    data_url = resource.url
-                    break
+            data_url = pkg.extras.get('access_application_download_URL')
+            log.debug("access_application_download_URL: %s" % data_url)
+
+            # data_url = None
+            # # FIXME: Somehow pick the actual data resource. By resource_type(?):
+            # # 'resources': [{},{...u'resource_type': 'not_known_yet',...},..,{}]
+            # for resource in pkg.resources:
+            #     if resource.resource_type == u'documentation':  # FIXME (see above)
+            #         data_url = resource.url
+            #         break
 
             metadata = rems_client.generate_package_metadata(
                 title_list, name, owner_emails, license_reference, data_url)
@@ -86,3 +92,20 @@ class RemsPlugin(plugin.SingletonPlugin):
                       'retry, save dataset later without changes.'))
                 # TODO: Add failed item to retry queue
                 log.debug('Adding failed item to retry queue (unimplemented)')
+
+    def _preprocess_if_ida_dataset(self, pkg):
+        '''
+        Perform preprocessing specific to IDA datasets if the dataset
+        appears to be from the IDA namespace.
+        :return:
+        '''
+
+        ida_download_url_template = "http://avaa.tdata.fi/remsida/dl.jsp?pid={p}"
+        ida_pid_regex = 'urn:nbn:fi:csc-ida\w+'
+
+        data_pid = pkg.name  # FIXME
+
+        if re.match(ida_pid_regex, data_pid):
+            url = ida_download_url_template.format(p=data_pid)
+            log.info("IDA dataset encountered; assuming download URL to be {u}".format(u=url))
+            pkg.extras['access_application_download_URL'] = url
