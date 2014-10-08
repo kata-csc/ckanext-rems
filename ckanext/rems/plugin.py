@@ -10,6 +10,8 @@ import ckan.plugins as plugin
 import rems_client
 import convert
 
+import ckanext.kata.utils as katautils
+
 log = logging.getLogger(__name__)
 
 
@@ -40,7 +42,19 @@ class RemsPlugin(plugin.SingletonPlugin):
         :type pkg: ckan.model.Package object
         '''
 
-        self._preprocess_if_ida_dataset(pkg)
+
+        pkg_as_dict = pkg.as_dict()
+        primary_pids = katautils.get_pids_by_type(
+            pid_type="data", data_dict=pkg_as_dict, primary=True, use_id_or_name=True
+        )
+
+        if not primary_pids:
+            log.error("Could not get primary data PID for package {p}; aborting".format(p=pkg.name))
+            return
+
+        data_pid = primary_pids[0]['id']
+
+        self._preprocess_if_ida_dataset(pkg, data_pid)
 
         if (pkg.extras.get('availability') == u'access_application' and
                 pkg.extras['access_application_new_form'] == 'True'):
@@ -56,7 +70,6 @@ class RemsPlugin(plugin.SingletonPlugin):
                 except ValueError, e:
                     log.warn(str(e))
 
-            name = pkg.name
             license_reference = pkg.license_id
             owner_emails = [pkg.extras['contact_0_email']]
 
@@ -72,7 +85,7 @@ class RemsPlugin(plugin.SingletonPlugin):
             #         break
 
             metadata = rems_client.generate_package_metadata(
-                title_list, name, owner_emails, license_reference, data_url)
+                title_list, data_pid, owner_emails, license_reference, data_url)
             metadata_json = json.dumps(metadata)
             # TODO: add 'addCatalogItem' to rabbitMQ queue for asynchronous performance
             request_url = config.get('rems.rest_base_url') + 'addCatalogItem'
@@ -85,7 +98,7 @@ class RemsPlugin(plugin.SingletonPlugin):
                 # Note: To be able to update like here, key must exist. Ensured
                 # in validators.
                 pkg.extras['access_application_URL'] = \
-                    rems_client.get_access_application_url(name)
+                    rems_client.get_access_application_url(data_pid)
             else:
                 h.flash_notice(
                     _('Dataset saved but REMS application creation failed. To '
@@ -93,17 +106,16 @@ class RemsPlugin(plugin.SingletonPlugin):
                 # TODO: Add failed item to retry queue
                 log.debug('Adding failed item to retry queue (unimplemented)')
 
-    def _preprocess_if_ida_dataset(self, pkg):
+    def _preprocess_if_ida_dataset(self, pkg, data_pid):
         '''
         Perform preprocessing specific to IDA datasets if the dataset
         appears to be from the IDA namespace.
-        :return:
+
+        The package object is modified in place.
         '''
 
         ida_download_url_template = "http://avaa.tdata.fi/remsida/dl.jsp?pid={p}"
         ida_pid_regex = 'urn:nbn:fi:csc-ida\w+'
-
-        data_pid = pkg.name  # FIXME
 
         if re.match(ida_pid_regex, data_pid):
             url = ida_download_url_template.format(p=data_pid)
