@@ -6,10 +6,13 @@ Resource Entitlement Management System (REMS) extensions for CKAN
 Enables using REMS access rights management with CKAN datasets.
 
 REMS provides tools to design application forms and workflows for items
-requiring authorization. REMS can be used by end user to apply access rights.
-Users controlling workflow may use REMS to administer the application as well as
-already granted access rights.
+requiring authorization. REMS can be used by the end user to apply for access to
+a dataset. Users controlling the workflow may use REMS to process the
+application and administer previously granted access rights.
 See: [https://tnc2013.terena.org/core/presentation/18](https://tnc2013.terena.org/core/presentation/18)
+
+The REMS plugin currently depends on Kata extensions
+(https://github.com/kata-csc/ckanext-kata/).
 
 
 Develop
