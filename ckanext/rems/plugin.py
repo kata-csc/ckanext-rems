@@ -76,14 +76,6 @@ class RemsPlugin(plugin.SingletonPlugin):
             data_url = pkg.extras.get('access_application_download_URL')
             log.debug("access_application_download_URL: %s" % data_url)
 
-            # data_url = None
-            # # FIXME: Somehow pick the actual data resource. By resource_type(?):
-            # # 'resources': [{},{...u'resource_type': 'not_known_yet',...},..,{}]
-            # for resource in pkg.resources:
-            #     if resource.resource_type == u'documentation':  # FIXME (see above)
-            #         data_url = resource.url
-            #         break
-
             metadata = rems_client.generate_package_metadata(
                 title_list, data_pid, owner_emails, license_reference, data_url)
             metadata_json = json.dumps(metadata)
@@ -121,3 +113,14 @@ class RemsPlugin(plugin.SingletonPlugin):
             url = ida_download_url_template.format(p=data_pid)
             log.info("IDA dataset encountered; assuming download URL to be {u}".format(u=url))
             pkg.extras['access_application_download_URL'] = url
+
+
+    # def get_data_download_url(self, pkg):
+    #     data_url = None
+    #     # FIXME: Somehow pick the actual data resource. By resource_type(?):
+    #     # 'resources': [{},{...u'resource_type': 'not_known_yet',...},..,{}]
+    #     for resource in pkg.resources:
+    #         if resource.resource_type == u'documentation':  # FIXME (see above)
+    #             data_url = resource.url
+    #             break
+    #     return data_url
