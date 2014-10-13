@@ -82,7 +82,17 @@ def post_metadata(url, metadata, post_format="application/json"):
     Post catalog item (metadata of a dataset) or a license reference to REMS.
 
     DEV: Email for 'ktester' account is 'kata.tester@funet.fi'
+
+    :param url:         REMS endpoint URL
+    :type url:          str
+    :param metadata:    the metadata of a dataset in the JSON or XML format specified by REMS
+    :type metadata:     str
+    :param post_format: MIME type for the posted data
+    :type post_format:  str
+    :return:            None
+    :raises RemsException: if a connection error occurs or the request returns a non-OK status
     '''
+
     log.info('Metadata: {md}'.format(md=metadata))
     try:
         resp = requests.post(url,
