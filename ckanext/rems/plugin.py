@@ -40,7 +40,19 @@ class RemsPlugin(plugin.SingletonPlugin):
     # Private methods
 
     def _update_metadata(self, pkg):
-        '''Update REMS metadata
+        try:
+            self._post_metadata(pkg)
+        except rems_client.RemsException as e:
+            h.flash_notice(
+                _('Dataset saved but REMS application creation failed. To '
+                  'retry, save dataset later without changes.')
+            )
+            # TODO: Add failed item to retry queue
+            log.debug('Adding failed item to retry queue (unimplemented)')
+
+
+    def _post_metadata(self, pkg):
+        '''Push created or updated metadata to REMS.
 
         :param pkg: package to be committed
         :type pkg: ckan.model.Package object
@@ -81,22 +93,13 @@ class RemsPlugin(plugin.SingletonPlugin):
             metadata_json = json.dumps(metadata)
             # TODO: add 'addCatalogItem' to rabbitMQ queue for asynchronous performance
             request_url = config.get('rems.rest_base_url') + 'addCatalogItem'
-            post_success = rems_client.post_metadata(
-                request_url, metadata_json, post_format="application/json")
+            rems_client.post_metadata(request_url, metadata_json, post_format="application/json")
 
             #return post_success  # Cut from here? So that harvesters don't get flash messages?
 
-            if post_success:
-                # Note: To be able to update like here, the key must already exist in extras.
-                # The validators in ckanext-kata ensure this.
-                pkg.extras['access_application_URL'] = \
-                    rems_client.get_access_application_url(primary_pid)
-            else:
-                h.flash_notice(
-                    _('Dataset saved but REMS application creation failed. To '
-                      'retry, save dataset later without changes.'))
-                # TODO: Add failed item to retry queue
-                log.debug('Adding failed item to retry queue (unimplemented)')
+            # Note: To be able to update like here, the key must already exist in extras.
+            # The validators in ckanext-kata ensure this.
+            pkg.extras['access_application_URL'] = rems_client.get_access_application_url(primary_pid)
 
 
     # def get_data_download_url(self, pkg):

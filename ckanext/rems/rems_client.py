@@ -95,19 +95,19 @@ def post_metadata(url, metadata, post_format="application/json"):
             rd = resp.json()['Response']
             log.debug('Response status: {st}, code: {co}, message: {msg}'.format(
                 st=resp.status_code, co=rd['Code'], msg=rd['Message']))
-            return True
         else:
-            log.warn('Response status: {st}, message: {msg}'.format(
-                st=resp.status_code, msg=resp.text))
-            return False
+            raise RemsException(
+                'REMS request failed; Response status: {st}, message: {msg}'.format(
+                st=resp.status_code, msg=resp.text)
+            )
     except requests.exceptions.ConnectionError, err:
         # TODO: This should retry in background (and notify success)
         # Copied 'except' from ckanext/resourceproxy/controller.py
         log.warn('Could not send metadata because a connection error '
                  'occurred: {er}'.format(er=err))
-        return False
+        raise RemsException(str(err))
 
-    
+
 def get_access_application_url(resource_id, target="application"):
     '''
     Generates the entry point URL for access application workflow.
@@ -119,3 +119,7 @@ def get_access_application_url(resource_id, target="application"):
         r=resource_id
     )
     return url
+
+
+class RemsException(Exception):
+    pass
