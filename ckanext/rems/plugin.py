@@ -56,22 +56,22 @@ class RemsPlugin(plugin.SingletonPlugin):
 
         :param pkg: package to be committed
         :type pkg: ckan.model.Package object
+        :raises rems_client.RemsException: if the primary data PID cannot be retrieved or if connection to REMS fails
         '''
-
-        # Some data dict juggling is needed in order to get the primary data PID conveniently
-        tmp_context = {'model': model, 'session': model.Session, 'user': c.user}
-        tmp_data_dict = {'id': pkg.id}
-        data_dict = get_action('package_show')(tmp_context, tmp_data_dict)
-
-        primary_pid = katautils.get_primary_pid(pid_type='data', data_dict=data_dict)
-
-        if not primary_pid:
-            log.error("Could not get primary data PID for package {p}; aborting".format(p=pkg.name))
-            return
 
         if (pkg.extras.get('availability') == u'access_application' and
                 pkg.extras['access_application_new_form'] == 'True'):
             log.debug("Posting updated package metadata to REMS")
+
+            # Some data dict juggling is needed in order to get the primary data PID consistently
+            tmp_context = {'model': model, 'session': model.Session, 'user': c.user}
+            tmp_data_dict = {'id': pkg.id}
+            data_dict = get_action('package_show')(tmp_context, tmp_data_dict)
+
+            primary_pid = katautils.get_primary_pid(pid_type='data', data_dict=data_dict)
+
+            if not primary_pid:
+                raise rems_client.RemsException("Failed to retrieve primary data PID")
 
             titles = sorted([(k,v) for (k,v) in pkg.extras.items() if re.search('^title', k)])
             langs = sorted([(k,v) for (k,v) in pkg.extras.items() if re.search('^lang_title', k)])
