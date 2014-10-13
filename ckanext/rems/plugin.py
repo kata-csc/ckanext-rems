@@ -7,6 +7,10 @@ import pylons.config as config
 
 import ckan.lib.helpers as h
 import ckan.plugins as plugin
+import ckan.model as model
+from ckan.lib.base import c
+from ckan.logic import get_action
+
 import rems_client
 import convert
 
@@ -42,19 +46,16 @@ class RemsPlugin(plugin.SingletonPlugin):
         :type pkg: ckan.model.Package object
         '''
 
+        # Some data dict juggling is needed in order to get the primary data PID conveniently
+        tmp_context = {'model': model, 'session': model.Session, 'user': c.user}
+        tmp_data_dict = {'id': pkg.id}
+        data_dict = get_action('package_show')(tmp_context, tmp_data_dict)
 
-        pkg_as_dict = pkg.as_dict()
-        primary_pids = katautils.get_pids_by_type(
-            pid_type="data", data_dict=pkg_as_dict, primary=True, use_id_or_name=True
-        )
+        primary_pid = katautils.get_primary_pid(pid_type='data', data_dict=data_dict)
 
-        if not primary_pids:
+        if not primary_pid:
             log.error("Could not get primary data PID for package {p}; aborting".format(p=pkg.name))
             return
-
-        data_pid = primary_pids[0]['id']
-
-        self._preprocess_if_ida_dataset(pkg, data_pid)
 
         if (pkg.extras.get('availability') == u'access_application' and
                 pkg.extras['access_application_new_form'] == 'True'):
@@ -74,10 +75,9 @@ class RemsPlugin(plugin.SingletonPlugin):
             owner_emails = [pkg.extras['contact_0_email']]
 
             data_url = pkg.extras.get('access_application_download_URL')
-            log.debug("access_application_download_URL: %s" % data_url)
 
             metadata = rems_client.generate_package_metadata(
-                title_list, data_pid, owner_emails, license_reference, data_url)
+                title_list, primary_pid, owner_emails, license_reference, data_url)
             metadata_json = json.dumps(metadata)
             # TODO: add 'addCatalogItem' to rabbitMQ queue for asynchronous performance
             request_url = config.get('rems.rest_base_url') + 'addCatalogItem'
@@ -87,32 +87,16 @@ class RemsPlugin(plugin.SingletonPlugin):
             #return post_success  # Cut from here? So that harvesters don't get flash messages?
 
             if post_success:
-                # Note: To be able to update like here, key must exist. Ensured
-                # in validators.
+                # Note: To be able to update like here, the key must already exist in extras.
+                # The validators in ckanext-kata ensure this.
                 pkg.extras['access_application_URL'] = \
-                    rems_client.get_access_application_url(data_pid)
+                    rems_client.get_access_application_url(primary_pid)
             else:
                 h.flash_notice(
                     _('Dataset saved but REMS application creation failed. To '
                       'retry, save dataset later without changes.'))
                 # TODO: Add failed item to retry queue
                 log.debug('Adding failed item to retry queue (unimplemented)')
-
-    def _preprocess_if_ida_dataset(self, pkg, data_pid):
-        '''
-        Perform preprocessing specific to IDA datasets if the dataset
-        appears to be from the IDA namespace.
-
-        The package object is modified in place.
-        '''
-
-        ida_download_url_template = "http://avaa.tdata.fi/remsida/dl.jsp?pid={p}"
-        ida_pid_regex = 'urn:nbn:fi:csc-ida\w+'
-
-        if re.match(ida_pid_regex, data_pid):
-            url = ida_download_url_template.format(p=data_pid)
-            log.info("IDA dataset encountered; assuming download URL to be {u}".format(u=url))
-            pkg.extras['access_application_download_URL'] = url
 
 
     # def get_data_download_url(self, pkg):
