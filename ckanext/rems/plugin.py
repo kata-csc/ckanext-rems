@@ -1,6 +1,7 @@
 import json
 import logging
 import re
+import itertools
 
 from pylons.i18n import _
 import pylons.config as config
@@ -13,8 +14,6 @@ from ckan.logic import get_action
 
 import rems_client
 import convert
-
-import ckanext.kata.utils as katautils
 
 log = logging.getLogger(__name__)
 
@@ -50,13 +49,35 @@ class RemsPlugin(plugin.SingletonPlugin):
             # TODO: Add failed item to retry queue
             log.debug('Adding failed item to retry queue (unimplemented)')
 
-    def _get_primary_pid(self, pkg):
-        # Some data dict juggling is needed in order to get the primary data PID consistently
-        tmp_context = {'model': model, 'session': model.Session, 'user': c.user}
-        tmp_data_dict = {'id': pkg.id}
-        data_dict = get_action('package_show')(tmp_context, tmp_data_dict)
+    def _get_pid_subkey(self, pid_str):
+        return pid_str.rsplit('_')[-1]
 
-        return katautils.get_primary_pid(pid_type='data', data_dict=data_dict)
+    def _get_pid_index(self, pid_str):
+        return pid_str.split('_')[1]
+
+    def _get_primary_data_pid(self, pkg):
+        """Get the primary data PID from the package object"""
+
+        extras = pkg.as_dict().get('extras')
+
+        pid_field_keys = [ k for k in extras if k.startswith('pids_') ]
+
+        pids_by_index = dict()
+
+        pid_field_keys.sort(key=self._get_pid_index)
+        for key, group in itertools.groupby(pid_field_keys, self._get_pid_index):
+            pids_by_index[key] = dict()
+            for pid_str in group:
+                subkey = self._get_pid_subkey(pid_str)
+                value = extras.get(pid_str)
+                pids_by_index[key][subkey] = value
+
+        for index, pid in pids_by_index.items():
+            if pid.get('primary') == 'True' and pid.get('type') == 'data':
+                return extras.get('pids_{i}_id'.format(i=index))
+
+        return None
+
 
     def _post_metadata(self, pkg):
         '''Push created or updated metadata to REMS.
@@ -70,10 +91,12 @@ class RemsPlugin(plugin.SingletonPlugin):
                 pkg.extras['access_application_new_form'] == 'True'):
             log.debug("Posting updated package metadata to REMS")
 
-            primary_pid = self._get_primary_pid(pkg)
+            primary_pid = self._get_primary_data_pid(pkg)
 
             if not primary_pid:
                 raise rems_client.RemsException("Failed to retrieve primary data PID")
+
+            log.debug("Primary PID: {p}".format(p=primary_pid))
 
             titles = sorted([(k,v) for (k,v) in pkg.extras.items() if re.search('^title', k)])
             langs = sorted([(k,v) for (k,v) in pkg.extras.items() if re.search('^lang_title', k)])
