@@ -50,6 +50,13 @@ class RemsPlugin(plugin.SingletonPlugin):
             # TODO: Add failed item to retry queue
             log.debug('Adding failed item to retry queue (unimplemented)')
 
+    def _get_primary_pid(self, pkg):
+        # Some data dict juggling is needed in order to get the primary data PID consistently
+        tmp_context = {'model': model, 'session': model.Session, 'user': c.user}
+        tmp_data_dict = {'id': pkg.id}
+        data_dict = get_action('package_show')(tmp_context, tmp_data_dict)
+
+        return katautils.get_primary_pid(pid_type='data', data_dict=data_dict)
 
     def _post_metadata(self, pkg):
         '''Push created or updated metadata to REMS.
@@ -63,12 +70,7 @@ class RemsPlugin(plugin.SingletonPlugin):
                 pkg.extras['access_application_new_form'] == 'True'):
             log.debug("Posting updated package metadata to REMS")
 
-            # Some data dict juggling is needed in order to get the primary data PID consistently
-            tmp_context = {'model': model, 'session': model.Session, 'user': c.user}
-            tmp_data_dict = {'id': pkg.id}
-            data_dict = get_action('package_show')(tmp_context, tmp_data_dict)
-
-            primary_pid = katautils.get_primary_pid(pid_type='data', data_dict=data_dict)
+            primary_pid = self._get_primary_pid(pkg)
 
             if not primary_pid:
                 raise rems_client.RemsException("Failed to retrieve primary data PID")
