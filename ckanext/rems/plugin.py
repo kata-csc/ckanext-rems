@@ -62,19 +62,22 @@ class RemsPlugin(plugin.SingletonPlugin):
 
         pid_field_keys = [ k for k in extras if k.startswith('pids_') ]
 
+        # Find the subkeys and values from the list of dicts of the form
+        # [ { 'pids_{index}_{subkey}': {value} }, ... ]
+
         pids_by_index = dict()
 
         pid_field_keys.sort(key=self._get_pid_index)
         for key, group in itertools.groupby(pid_field_keys, self._get_pid_index):
             pids_by_index[key] = dict()
-            for pid_str in group:
-                subkey = self._get_pid_subkey(pid_str)
-                value = extras.get(pid_str)
+            for pid_key_str in group:
+                subkey = self._get_pid_subkey(pid_key_str)
+                value = extras.get(pid_key_str)
                 pids_by_index[key][subkey] = value
 
         for index, pid in pids_by_index.items():
             if pid.get('primary') == 'True' and pid.get('type') == 'data':
-                return extras.get('pids_{i}_id'.format(i=index))
+                return pid.get('id')
 
         return None
 
