@@ -31,7 +31,7 @@ def generate_package_metadata(titles, id, owner_emails, license_id, url=None):
                 'resourceDomain': config.get('rems.resource_domain'),
                 'resourceId': id,
                 'owners': [
-                    {'email': email } for email in owner_emails
+                    {'email': email, 'emailType': 'invite'} for email in owner_emails
                 ]
             },
             'licenses': [
@@ -47,7 +47,7 @@ def generate_package_metadata(titles, id, owner_emails, license_id, url=None):
     return catalog_item
 
 
-def generate_license_metadata(licenses, owner_email,
+def generate_license_metadata(licenses, owner_eppn,
                               resource_domain=None):
     '''
     Generates a REMS-compatible metadata structure for a list of licenses
@@ -68,7 +68,7 @@ def generate_license_metadata(licenses, owner_email,
         'importlicense': {
             'resourcedomain': resource_domain,
             'owner': {
-                'email': owner_email
+                'eppn': owner_eppn
             },
             'licenses': [ l.as_dict() for l in licenses ]
         }
