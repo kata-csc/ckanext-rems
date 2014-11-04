@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ckanext.rems package &mdash; Kata metadata catalogue documentation</title>
+    
+    <link rel="stylesheet" href="_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Kata metadata catalogue documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="index.html">Kata</a></div>
+        <div class="rel">
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ckanext-rems-package">
+<h1>ckanext.rems package<a class="headerlink" href="#ckanext-rems-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ckanext.rems.i18n.html">ckanext.rems.i18n package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ckanext.rems.i18n.html#module-ckanext.rems.i18n">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ckanext.rems.convert">
+<span id="ckanext-rems-convert-module"></span><h2>ckanext.rems.convert module<a class="headerlink" href="#module-ckanext.rems.convert" title="Permalink to this headline">¶</a></h2>
+<p>Utility functions for converting metadata values to formats accepted by
+the REMS server.</p>
+<dl class="function">
+<dt id="ckanext.rems.convert.convert_language_code">
+<tt class="descclassname">ckanext.rems.convert.</tt><tt class="descname">convert_language_code</tt><big>(</big><em>lang_code</em><big>)</big><a class="reference internal" href="_modules/ckanext/rems/convert.html#convert_language_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.convert.convert_language_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert three-letter ISO 639-2 T language codes to two-letter codes if necessary.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ckanext.rems.license">
+<span id="ckanext-rems-license-module"></span><h2>ckanext.rems.license module<a class="headerlink" href="#module-ckanext.rems.license" title="Permalink to this headline">¶</a></h2>
+<p>Classes and functions for handling license metadata
+and preparing it for sending to REMS.</p>
+<dl class="class">
+<dt id="ckanext.rems.license.License">
+<em class="property">class </em><tt class="descclassname">ckanext.rems.license.</tt><tt class="descname">License</tt><big>(</big><em>id</em>, <em>value_type='link'</em><big>)</big><a class="reference internal" href="_modules/ckanext/rems/license.html#License"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.license.License" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A representation of the metadata of a single license for purposes of the REMS client.</p>
+<dl class="method">
+<dt id="ckanext.rems.license.License.add_localization">
+<tt class="descname">add_localization</tt><big>(</big><em>localized_content</em><big>)</big><a class="reference internal" href="_modules/ckanext/rems/license.html#License.add_localization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.license.License.add_localization" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ckanext.rems.license.License.as_dict">
+<tt class="descname">as_dict</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ckanext/rems/license.html#License.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.license.License.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ckanext.rems.license.LicenseLocalizedContent">
+<em class="property">class </em><tt class="descclassname">ckanext.rems.license.</tt><tt class="descname">LicenseLocalizedContent</tt><big>(</big><em>lang</em>, <em>title</em>, <em>content</em><big>)</big><a class="reference internal" href="_modules/ckanext/rems/license.html#LicenseLocalizedContent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.license.LicenseLocalizedContent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A representation of the (localized) contents of a single license.</p>
+<dl class="method">
+<dt id="ckanext.rems.license.LicenseLocalizedContent.as_dict">
+<tt class="descname">as_dict</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ckanext/rems/license.html#LicenseLocalizedContent.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.license.LicenseLocalizedContent.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ckanext.rems.plugin">
+<span id="ckanext-rems-plugin-module"></span><h2>ckanext.rems.plugin module<a class="headerlink" href="#module-ckanext.rems.plugin" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ckanext.rems.plugin.RemsPlugin">
+<em class="property">class </em><tt class="descclassname">ckanext.rems.plugin.</tt><tt class="descname">RemsPlugin</tt><big>(</big><em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ckanext/rems/plugin.html#RemsPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.plugin.RemsPlugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ckan.plugins.core.SingletonPlugin</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">ckan.plugins.interfaces.IConfigurer</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">ckan.plugins.interfaces.IPackageController</span></tt></p>
+<dl class="method">
+<dt id="ckanext.rems.plugin.RemsPlugin.create">
+<tt class="descname">create</tt><big>(</big><em>pkg</em><big>)</big><a class="reference internal" href="_modules/ckanext/rems/plugin.html#RemsPlugin.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.plugin.RemsPlugin.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ckanext.rems.plugin.RemsPlugin.edit">
+<tt class="descname">edit</tt><big>(</big><em>pkg</em><big>)</big><a class="reference internal" href="_modules/ckanext/rems/plugin.html#RemsPlugin.edit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.plugin.RemsPlugin.edit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ckanext.rems.plugin.RemsPlugin.update_config">
+<tt class="descname">update_config</tt><big>(</big><em>config</em><big>)</big><a class="reference internal" href="_modules/ckanext/rems/plugin.html#RemsPlugin.update_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.plugin.RemsPlugin.update_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ckanext.rems.rems_client">
+<span id="ckanext-rems-rems-client-module"></span><h2>ckanext.rems.rems_client module<a class="headerlink" href="#module-ckanext.rems.rems_client" title="Permalink to this headline">¶</a></h2>
+<p>Methods for communicating with the Resource Entitlement Management System</p>
+<dl class="exception">
+<dt id="ckanext.rems.rems_client.RemsException">
+<em class="property">exception </em><tt class="descclassname">ckanext.rems.rems_client.</tt><tt class="descname">RemsException</tt><a class="reference internal" href="_modules/ckanext/rems/rems_client.html#RemsException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.rems_client.RemsException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ckanext.rems.rems_client.generate_license_metadata">
+<tt class="descclassname">ckanext.rems.rems_client.</tt><tt class="descname">generate_license_metadata</tt><big>(</big><em>licenses</em>, <em>owner_email</em>, <em>resource_domain=None</em><big>)</big><a class="reference internal" href="_modules/ckanext/rems/rems_client.html#generate_license_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.rems_client.generate_license_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a REMS-compatible metadata structure for a list of licenses
+ready for importing to REMS. The result is a nested structure of
+dicts and lists that can be readily converted to JSON.</p>
+<p>Arguments:
+licenses        &#8211; a sequence of License objects
+owner_email     &#8211; the email address to be defined as the owner of the licenses in REMS
+resource_domain &#8211; the REMS resource domain for the licenses; if None, use the default set in Pylons configuration</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ckanext.rems.rems_client.generate_package_metadata">
+<tt class="descclassname">ckanext.rems.rems_client.</tt><tt class="descname">generate_package_metadata</tt><big>(</big><em>titles</em>, <em>id</em>, <em>owner_emails</em>, <em>license_id</em>, <em>url=None</em><big>)</big><a class="reference internal" href="_modules/ckanext/rems/rems_client.html#generate_package_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.rems_client.generate_package_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a REMS-compatible metadata structure from the given package metadata.
+The result is a nested structure of dicts and lists that can be readily
+converted to JSON.</p>
+<p>Arguments:
+titles       &#8211; list of {&#8216;lang&#8217;: &#8216;val&#8217;, &#8216;title&#8217;: &#8216;val&#8217;) dicts
+id           &#8211; id of the resource/dataset
+owner_emails &#8211; list of Haka-federated email addresses that identify the owners of the dataset
+license      &#8211; reference of the license used for the dataset
+url          &#8211; (optional) a URL from which the dataset can be obtained</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ckanext.rems.rems_client.get_access_application_url">
+<tt class="descclassname">ckanext.rems.rems_client.</tt><tt class="descname">get_access_application_url</tt><big>(</big><em>resource_id</em>, <em>target='application'</em><big>)</big><a class="reference internal" href="_modules/ckanext/rems/rems_client.html#get_access_application_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.rems_client.get_access_application_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the entry point URL for access application workflow.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ckanext.rems.rems_client.post_metadata">
+<tt class="descclassname">ckanext.rems.rems_client.</tt><tt class="descname">post_metadata</tt><big>(</big><em>url</em>, <em>metadata</em>, <em>post_format='application/json'</em><big>)</big><a class="reference internal" href="_modules/ckanext/rems/rems_client.html#post_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.rems_client.post_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post catalog item (metadata of a dataset) or a license reference to REMS.</p>
+<p>DEV: Email for &#8216;ktester&#8217; account is <a class="reference external" href="mailto:'kata&#46;tester&#37;&#52;&#48;funet&#46;fi">'kata<span>&#46;</span>tester<span>&#64;</span>funet<span>&#46;</span>fi</a>&#8216;</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>url</strong> (<em>str</em>) &#8211; REMS endpoint URL</li>
+<li><strong>metadata</strong> (<em>str</em>) &#8211; the metadata of a dataset in the JSON or XML format specified by REMS</li>
+<li><strong>post_format</strong> (<em>str</em>) &#8211; MIME type for the posted data</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">None</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Raises RemsException:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><p class="first last">if a connection error occurs or the request returns a non-OK status</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ckanext.rems.rems_command">
+<span id="ckanext-rems-rems-command-module"></span><h2>ckanext.rems.rems_command module<a class="headerlink" href="#module-ckanext.rems.rems_command" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ckanext.rems.rems_command.RemsCommand">
+<em class="property">class </em><tt class="descclassname">ckanext.rems.rems_command.</tt><tt class="descname">RemsCommand</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/ckanext/rems/rems_command.html#RemsCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.rems_command.RemsCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">ckan.lib.cli.CkanCommand</span></tt></p>
+<p>Usage: remscmd &lt;command&gt; &lt;owner_email&gt; [server_url]</p>
+<p>Allowed commands:</p>
+<p>add_ckan_licenses   - posts the CKAN license list to REMS</p>
+<p>In all cases, &lt;owner_email&gt; should be a Haka-registered email
+address for the owner of the license or dataset.</p>
+<p>If server_url is not specified, rems.rest_base_url from config
+will be used.</p>
+<dl class="method">
+<dt id="ckanext.rems.rems_command.RemsCommand.command">
+<tt class="descname">command</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ckanext/rems/rems_command.html#RemsCommand.command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ckanext.rems.rems_command.RemsCommand.command" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ckanext.rems.rems_command.RemsCommand.summary">
+<tt class="descname">summary</tt><em class="property"> = ''</em><a class="headerlink" href="#ckanext.rems.rems_command.RemsCommand.summary" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ckanext.rems.rems_command.RemsCommand.usage">
+<tt class="descname">usage</tt><em class="property"> = '\n    Usage: remscmd &lt;command&gt; &lt;owner_email&gt; [server_url]\n\n    Allowed commands:\n\n    add_ckan_licenses \t- posts the CKAN license list to REMS\n\n    In all cases, &lt;owner_email&gt; should be a Haka-registered email\n    address for the owner of the license or dataset.\n\n    If server_url is not specified, rems.rest_base_url from config\n    will be used.\n    '</em><a class="headerlink" href="#ckanext.rems.rems_command.RemsCommand.usage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ckanext.rems">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ckanext.rems" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="simple">
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="genindex.html" title="General Index"
+             >index</a>
+            <br/>
+            <a href="_sources/ckanext.rems.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2014, CSC.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

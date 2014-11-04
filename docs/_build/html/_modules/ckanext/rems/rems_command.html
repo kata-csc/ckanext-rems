@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ckanext.rems.rems_command &mdash; Kata metadata catalogue documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Kata metadata catalogue documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="../../../index.html">Kata</a></div>
+        <div class="rel">
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for ckanext.rems.rems_command</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">pylons.config</span> <span class="kn">as</span> <span class="nn">config</span>
+
+<span class="kn">import</span> <span class="nn">ckan.lib.cli</span> <span class="kn">as</span> <span class="nn">cli</span>
+<span class="kn">import</span> <span class="nn">ckan.model.license</span>
+<span class="kn">import</span> <span class="nn">license</span>
+<span class="kn">import</span> <span class="nn">rems_client</span>
+
+
+<div class="viewcode-block" id="RemsCommand"><a class="viewcode-back" href="../../../ckanext.rems.html#ckanext.rems.rems_command.RemsCommand">[docs]</a><span class="k">class</span> <span class="nc">RemsCommand</span><span class="p">(</span><span class="n">cli</span><span class="o">.</span><span class="n">CkanCommand</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Usage: remscmd &lt;command&gt; &lt;owner_email&gt; [server_url]</span>
+
+<span class="sd">    Allowed commands:</span>
+
+<span class="sd">    add_ckan_licenses \t- posts the CKAN license list to REMS</span>
+
+<span class="sd">    In all cases, &lt;owner_email&gt; should be a Haka-registered email</span>
+<span class="sd">    address for the owner of the license or dataset.</span>
+
+<span class="sd">    If server_url is not specified, rems.rest_base_url from config</span>
+<span class="sd">    will be used.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">summary</span> <span class="o">=</span> <span class="n">__doc__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">usage</span> <span class="o">=</span> <span class="n">__doc__</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RemsCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min_args</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max_args</span> <span class="o">=</span> <span class="mi">3</span>
+
+<div class="viewcode-block" id="RemsCommand.command"><a class="viewcode-back" href="../../../ckanext.rems.html#ckanext.rems.rems_command.RemsCommand.command">[docs]</a>    <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_config</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_args</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_args</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">print_usage</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">owner_email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">rems_url</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rems_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">cmd</span> <span class="o">==</span> <span class="s">&#39;add_ckan_licenses&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_ckan_licenses</span><span class="p">(</span><span class="n">rems_url</span><span class="p">,</span> <span class="n">owner_email</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&quot;Command {c} not recognized&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">cmd</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">_load_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RemsCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_load_config</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_add_ckan_licenses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rems_url</span><span class="p">,</span> <span class="n">owner_email</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">rems_url</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">rems_url</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;rems.rest_base_url&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;addLicense&quot;</span>
+
+        <span class="n">license_register</span> <span class="o">=</span> <span class="n">ckan</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">LicenseRegister</span><span class="p">()</span>
+        <span class="n">known_licenses</span> <span class="o">=</span> <span class="n">license_register</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+
+        <span class="n">licenses</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">ckan_license</span> <span class="ow">in</span> <span class="n">known_licenses</span><span class="p">:</span>
+            <span class="c"># TODO: support multiple localized versions of licenses?</span>
+            <span class="n">lic</span> <span class="o">=</span> <span class="n">license</span><span class="o">.</span><span class="n">License</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">ckan_license</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">value_type</span><span class="o">=</span><span class="s">&#39;link&#39;</span><span class="p">)</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">license</span><span class="o">.</span><span class="n">LicenseLocalizedContent</span><span class="p">(</span><span class="s">&#39;en&#39;</span><span class="p">,</span> <span class="n">ckan_license</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">ckan_license</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+            <span class="n">lic</span><span class="o">.</span><span class="n">add_localization</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+            <span class="n">licenses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lic</span><span class="p">)</span>
+
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">rems_client</span><span class="o">.</span><span class="n">generate_license_metadata</span><span class="p">(</span><span class="n">licenses</span><span class="p">,</span> <span class="n">owner_email</span><span class="p">)</span>
+        <span class="n">json_metadata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+
+        <span class="k">print</span> <span class="s">&quot;Sending license metadata to {u} ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">u</span><span class="o">=</span><span class="n">rems_url</span><span class="p">)</span>
+        <span class="c">#print json_metadata</span>
+        <span class="n">rems_client</span><span class="o">.</span><span class="n">post_metadata</span><span class="p">(</span><span class="n">rems_url</span><span class="p">,</span> <span class="n">json_metadata</span><span class="p">)</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="simple">
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="../../../search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |
+          <a href="../../../genindex.html" title="General Index"
+             >index</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer">
+        &copy; Copyright 2014, CSC.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>
