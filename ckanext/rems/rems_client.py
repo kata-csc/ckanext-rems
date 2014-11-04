@@ -57,8 +57,7 @@ def generate_license_metadata(licenses, owner_email,
     Arguments:
     licenses        -- a sequence of License objects
     owner_email     -- the email address to be defined as the owner of the licenses in REMS
-    resource_domain -- the REMS resource domain for the licenses;
-                       if None, use the default set in Pylons configuration
+    resource_domain -- the REMS resource domain for the licenses; if None, use the default set in Pylons configuration
     '''
 
     if not resource_domain:
