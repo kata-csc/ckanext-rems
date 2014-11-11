@@ -17,8 +17,9 @@ class RemsCommand(cli.CkanCommand):
 
     add_ckan_licenses \t- posts the CKAN license list to REMS
 
-    In all cases, <owner_email> should be a Haka-registered email
-    address for the owner of the license or dataset.
+    In most cases, <owner_email> should be a Haka-registered email
+    address for the owner of the license or dataset or with licenses,
+    a Haka-registered eppn.
 
     If server_url is not specified, rems.rest_base_url from config
     will be used.
