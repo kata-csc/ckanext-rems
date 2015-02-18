@@ -1,9 +1,4 @@
-ckanext-rems
-============
-
-Resource Entitlement Management System (REMS) extensions for CKAN
-
-Enables using REMS access rights management with CKAN datasets.
+Resource Entitlement Management System (REMS) extension for CKAN. Enables use of REMS access rights management with CKAN datasets.
 
 REMS provides tools to design application forms and workflows for items
 requiring authorization. REMS can be used by the end user to apply for access to
@@ -11,12 +6,10 @@ a dataset. Users controlling the workflow may use REMS to process the
 application and administer previously granted access rights.
 See: [https://tnc2013.terena.org/core/presentation/18](https://tnc2013.terena.org/core/presentation/18)
 
-The REMS plugin currently depends on Kata extensions
-(https://github.com/kata-csc/ckanext-kata/).
+The REMS plugin currently depends on the [Kata extension](https://github.com/kata-csc/ckanext-kata/).
 
-
-Develop
-=======
+Development
+===========
 
     git clone https://github.com/kata-csc/ckanext-rems.git
     cd ckanext-rems
@@ -28,9 +21,9 @@ Develop
 Installation
 ============
 
-To install this REMS-plugin
+You can install ckanext-rems with
 
-  pip install -e git://github.com/kata-csc/ckanext-rems.git#egg=ckanext-rems
+    pip install -e git://github.com/kata-csc/ckanext-rems.git#egg=ckanext-rems
 
 
 .ini configuration
