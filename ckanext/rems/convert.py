@@ -21,7 +21,7 @@ def convert_language_code(lang_code):
         try:
             lang = pycountry.languages.get(terminology=lang_code)
             new_lang_code = lang.alpha2
-        except KeyError:
+        except (KeyError, AttributeError):
             raise ValueError("Invalid language code: {l}", l=lang_code)
 
     return new_lang_code
