@@ -25,6 +25,7 @@ setup(
     zip_safe=False,
     install_requires=[
         # -*- Extra requirements: -*-
+        'pycountry >= 1.8',
     ],
     tests_require=[
         'nose',
