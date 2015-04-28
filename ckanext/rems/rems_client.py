@@ -69,7 +69,7 @@ def generate_license_metadata(licenses, owner_eppn,
             'owner': {
                 'eppn': owner_eppn
             },
-            'licenses': [ l.as_dict() for l in licenses ]
+            'licenses': [l.as_dict() for l in licenses]
         }
     }
 

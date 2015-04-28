@@ -8,9 +8,6 @@ import pylons.config as config
 
 import ckan.lib.helpers as h
 import ckan.plugins as plugin
-import ckan.model as model
-from ckan.lib.base import c
-from ckan.logic import get_action
 
 import rems_client
 import convert
@@ -47,6 +44,7 @@ class RemsPlugin(plugin.SingletonPlugin):
                   'retry, save dataset later without changes.')
             )
             # TODO: Add failed item to retry queue
+            log.debug(str(e))
             log.debug('Adding failed item to retry queue (unimplemented)')
 
     def _get_pid_subkey(self, pid_str):
@@ -91,7 +89,7 @@ class RemsPlugin(plugin.SingletonPlugin):
         '''
 
         if (pkg.extras.get('availability') == u'access_application' and
-                pkg.extras['access_application_new_form'] == 'True'):
+                pkg.extras['access_application_new_form'] == 'True') and not pkg.private:
             log.debug("Posting updated package metadata to REMS")
 
             primary_pid = self._get_primary_data_pid(pkg)
@@ -104,7 +102,7 @@ class RemsPlugin(plugin.SingletonPlugin):
             titles = sorted([(k,v) for (k,v) in pkg.extras.items() if re.search('^title', k)])
             langs = sorted([(k,v) for (k,v) in pkg.extras.items() if re.search('^lang_title', k)])
             title_list = []
-            for title, lang  in zip(titles, langs):
+            for title, lang in zip(titles, langs):
                 title_list.append({'value': title[1], 'lang': lang[1]})
                 try:
                     title_list[-1]['lang'] = convert.convert_language_code(lang[1])
