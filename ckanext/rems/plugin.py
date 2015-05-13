@@ -110,7 +110,9 @@ class RemsPlugin(plugin.SingletonPlugin):
                     log.warn(str(e))
 
             license_reference = pkg.license_id
-            owner_emails = [pkg.extras['contact_0_email']]
+            owner_emails = [pkg.extras.get('contact_0_email')]
+            if not owner_emails:
+                raise rems_client.RemsException("Failed to retrieve contact email")
 
             data_url = pkg.extras.get('access_application_download_URL')
 
