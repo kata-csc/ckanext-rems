@@ -99,15 +99,18 @@ class RemsPlugin(plugin.SingletonPlugin):
 
             log.debug("Primary PID: {p}".format(p=primary_pid))
 
-            titles = sorted([(k,v) for (k,v) in pkg.extras.items() if re.search('^title', k)])
-            langs = sorted([(k,v) for (k,v) in pkg.extras.items() if re.search('^lang_title', k)])
+            # fetch the JSON title string and convert it to format required by REMS
+            json_title = json.loads(pkg.title)
             title_list = []
-            for title, lang in zip(titles, langs):
-                title_list.append({'value': title[1], 'lang': lang[1]})
+            for k, v in json_title.iteritems():
+                # try to convert the 3-letter ISO639-2 T code to two-letter format
                 try:
-                    title_list[-1]['lang'] = convert.convert_language_code(lang[1])
-                except ValueError, e:
+                    l = convert.convert_language_code(k)
+                except (ValueError, AttributeError), e:
                     log.warn(str(e))
+                    l = k
+
+                title_list.append({'value': v, 'lang': l})
 
             license_reference = pkg.license_id
             owner_emails = [pkg.extras.get('contact_0_email')]
