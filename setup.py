@@ -23,10 +23,6 @@ setup(
     namespace_packages=['ckanext', 'ckanext.rems'],
     include_package_data=True,
     zip_safe=False,
-    install_requires=[
-        # -*- Extra requirements: -*-
-        'pycountry < 1.12',
-    ],
     tests_require=[
         'nose',
     ],
