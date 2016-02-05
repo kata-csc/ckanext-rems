@@ -35,11 +35,10 @@ setup(
             ('**.py', 'python', None),
         ],
     },
-    entry_points=
-    '''
-    [ckan.plugins]
-    rems=ckanext.rems.plugin:RemsPlugin
-    [paste.paster_command]
-    remscmd = ckanext.rems.rems_command:RemsCommand
-    ''',
+    entry_points="""
+        [ckan.plugins]
+        rems=ckanext.rems.plugin:RemsPlugin
+        [paste.paster_command]
+        remscmd = ckanext.rems.rems_command:RemsCommand
+        """,
 )
