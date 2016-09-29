@@ -89,15 +89,18 @@ class RemsPlugin(plugin.SingletonPlugin):
         '''
 
         if (pkg.extras.get('availability') == u'access_application' and
-                pkg.extras['access_application_new_form'] == 'True') and not pkg.private:
+                (pkg.extras['access_application'] == 'access_application_reetta_ida' or
+                pkg.extras['access_application'] == 'access_application_reetta')) and \
+            not pkg.private:
+
             log.debug("Posting updated package metadata to REMS")
 
-            primary_pid = self._get_primary_data_pid(pkg)
+            rems_id = pkg.extras.get('access_application_ida_identifier') if pkg.extras['access_application'] == 'access_application_reetta_ida' else pkg.id
 
-            if not primary_pid:
-                raise rems_client.RemsException("Failed to retrieve primary data PID")
+            if not rems_id:
+                raise rems_client.RemsException("Failed to retrieve the ID to send to REMS service")
 
-            log.debug("Primary PID: {p}".format(p=primary_pid))
+            log.debug("Rems ID: {p}".format(p=rems_id))
 
             # fetch the JSON title string and convert it to format required by REMS
             json_title = json.loads(pkg.title)
@@ -120,7 +123,7 @@ class RemsPlugin(plugin.SingletonPlugin):
             data_url = pkg.extras.get('access_application_download_URL')
 
             metadata = rems_client.generate_package_metadata(
-                title_list, primary_pid, owner_emails, license_reference, data_url)
+                title_list, rems_id, owner_emails, license_reference, data_url)
             metadata_json = json.dumps(metadata)
             # TODO: add 'addCatalogItem' to rabbitMQ queue for asynchronous performance
             request_url = config.get('rems.rest_base_url') + 'addCatalogItem'
@@ -130,7 +133,7 @@ class RemsPlugin(plugin.SingletonPlugin):
 
             # Note: To be able to update like here, the key must already exist in extras.
             # The validators in ckanext-kata ensure this.
-            pkg.extras['access_application_URL'] = rems_client.get_access_application_url(primary_pid)
+            pkg.extras['access_application_URL'] = rems_client.get_access_application_url(rems_id)
 
 
     # def get_data_download_url(self, pkg):
