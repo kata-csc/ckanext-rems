@@ -95,7 +95,7 @@ class RemsPlugin(plugin.SingletonPlugin):
 
             log.debug("Posting updated package metadata to REMS")
 
-            rems_id = pkg.extras.get('access_application_ida_identifier') if pkg.extras['access_application'] == 'access_application_reetta_ida' else pkg.id
+            rems_id = pkg.extras.get('external_id') if pkg.extras['access_application'] == 'access_application_reetta_ida' else pkg.id
 
             if not rems_id:
                 raise rems_client.RemsException("Failed to retrieve the ID to send to REMS service")
