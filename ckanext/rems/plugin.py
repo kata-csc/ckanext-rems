@@ -53,32 +53,6 @@ class RemsPlugin(plugin.SingletonPlugin):
     def _get_pid_index(self, pid_str):
         return pid_str.split('_')[1]
 
-    def _get_primary_data_pid(self, pkg):
-        """Get the primary data PID from the package object"""
-
-        extras = pkg.as_dict().get('extras')
-
-        pid_field_keys = [ k for k in extras if k.startswith('pids_') ]
-
-        # Find the subkeys and values from the list of dicts of the form
-        # [ { 'pids_{index}_{subkey}': {value} }, ... ]
-
-        pids_by_index = dict()
-
-        pid_field_keys.sort(key=self._get_pid_index)
-        for key, group in itertools.groupby(pid_field_keys, self._get_pid_index):
-            pids_by_index[key] = dict()
-            for pid_key_str in group:
-                subkey = self._get_pid_subkey(pid_key_str)
-                value = extras.get(pid_key_str)
-                pids_by_index[key][subkey] = value
-
-        for index, pid in pids_by_index.items():
-            if pid.get('primary') == 'True' and pid.get('type') == 'data':
-                return pid.get('id')
-
-        return None
-
 
     def _post_metadata(self, pkg):
         '''Push created or updated metadata to REMS.
@@ -93,12 +67,12 @@ class RemsPlugin(plugin.SingletonPlugin):
                 pkg.extras['access_application'] == 'access_application_reetta')) and \
             not pkg.private:
 
-            log.debug("Posting updated package metadata to REMS")
+            log.debug("Posting updated package metadata to Reetta service")
 
             rems_id = pkg.extras.get('external_id') if pkg.extras['access_application'] == 'access_application_reetta_ida' else pkg.id
 
             if not rems_id:
-                raise rems_client.RemsException("Failed to retrieve the ID to send to REMS service")
+                raise rems_client.RemsException("Failed to retrieve the ID to send to Reetta service")
 
             log.debug("Rems ID: {p}".format(p=rems_id))
 
