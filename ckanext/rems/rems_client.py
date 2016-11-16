@@ -92,7 +92,8 @@ def post_metadata(url, metadata, post_format="application/json"):
     :raises RemsException: if a connection error occurs or the request returns a non-OK status
     '''
 
-    log.info('Metadata: {md}'.format(md=metadata))
+    log.info("Metadata: {md}, Headers: {{'Content-Type': {pf} }} "
+             .format(md=metadata, pf=post_format))
     try:
         resp = requests.post(url,
                              metadata,
