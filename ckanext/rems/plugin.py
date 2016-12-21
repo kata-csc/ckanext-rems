@@ -90,6 +90,14 @@ class RemsPlugin(plugin.SingletonPlugin):
                 title_list.append({'value': v, 'lang': l})
 
             license_reference = pkg.license_id
+
+            # Use this code if multiple distributors are needed to be placed to rems post request
+            # owner_emails = []
+            # i = 0
+            # while pkg.extras.get('contact_{}_email'.format(str(i))):
+            #     owner_emails.append(pkg.extras.get('contact_{}_email'.format(str(i))))
+            #     i += 1
+            # If the above are uncommented, remove the below line
             owner_emails = [pkg.extras.get('contact_0_email')]
             if not owner_emails:
                 raise rems_client.RemsException("Failed to retrieve contact email")
