@@ -62,14 +62,13 @@ class RemsPlugin(plugin.SingletonPlugin):
         :raises rems_client.RemsException: if the primary data PID cannot be retrieved or if connection to REMS fails
         '''
 
-        if (pkg.extras.get('availability') == u'access_application' and
-                (pkg.extras['access_application'] == 'access_application_reetta_ida' or
-                pkg.extras['access_application'] == 'access_application_reetta')) and \
+        if (pkg.extras.get('availability') == 'access_application_rems_ida' or
+            pkg.extras.get('availability') == 'access_application_rems_other') and \
             not pkg.private:
 
             log.debug("Posting updated package metadata to Reetta service")
 
-            rems_id = pkg.extras.get('external_id') if pkg.extras['access_application'] == 'access_application_reetta_ida' else pkg.id
+            rems_id = pkg.extras.get('external_id') if pkg.extras.get('availability') == 'access_application_rems_ida' else pkg.id
 
             if not rems_id:
                 raise rems_client.RemsException("Failed to retrieve the ID to send to Reetta service")
