@@ -48,7 +48,7 @@ test_package = {
     'metadata_created': '2014-02-14T20:30:34.721435',
     'metadata_modified': '2014-02-14T20:30:34.721435',
     'mimetype': None,
-    u'name': u'FSD1024',
+
     u'notes': u'Aineisto on Puolueet ja kunnallisdemokratia 1996 -osa-aineistoista (FSD1021, FSD1022, FSD1023) yhdistetty aineisto. Aineisto sis\xe4lt\xe4\xe4 my\xf6s muuttujan, jossa on eritelty vaaleissa l\xe4pip\xe4\xe4sseet valtuutetut.',
     'num_resources': 3,
     'num_tags': 25,
